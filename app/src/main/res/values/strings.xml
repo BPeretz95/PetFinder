@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Pet Finder</string>
+    <string name="button1">Find my Pet</string>
+    <string name="button2">I Found a Pet</string>
+</resources>
