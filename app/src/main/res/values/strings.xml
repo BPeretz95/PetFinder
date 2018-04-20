@@ -2,4 +2,25 @@
     <string name="app_name">Pet Finder</string>
     <string name="button1">Find my Pet</string>
     <string name="button2">I Found a Pet</string>
+
+    <string name="animal_prompt">Choose an animal</string>
+    <string name="features_prompt">Choose the most distinct features</string>
+
+
+
+    <string-array name="animal_arrays">
+        <item> </item>
+        <item>Dog</item>
+        <item>Cat</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="features_arrays">
+        <item> </item>
+        <item>Spotted</item>
+        <item>Striped</item>
+        <item>Single Color</item>
+        <item>Multi Color</item>
+    </string-array>
+
 </resources>
