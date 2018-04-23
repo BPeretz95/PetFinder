@@ -2,10 +2,10 @@
     <string name="app_name">Pet Finder</string>
     <string name="button1">Find my Pet</string>
     <string name="button2">I Found a Pet</string>
+    <string name="title_activity_maps">Map</string>
 
     <string name="animal_prompt">Choose an animal</string>
     <string name="features_prompt">Choose the most distinct features</string>
-
 
 
     <string-array name="animal_arrays">
@@ -22,5 +22,8 @@
         <item>Single Color</item>
         <item>Multi Color</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

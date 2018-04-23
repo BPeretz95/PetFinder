@@ -96,16 +96,6 @@
         android:layout_alignParentTop="true"
         app:srcCompat="@android:drawable/checkbox_off_background" />
 
-    <TextView
-        android:id="@+id/textLocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/editEmail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="15dp"
-        android:hint="Location"
-        android:text="" />
 
 
 </RelativeLayout>
