@@ -25,8 +25,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDb2_pMJ0XAr_qWXrmyxV60i0Ym7_KP0-g"/>
 
-        <activity android:name=".MapActivity"
-            android:label="@string/title_activity_maps"></activity>
+
 
 
         <activity android:name=".PhotoReview"></activity>
