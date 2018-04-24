@@ -124,19 +124,6 @@ public class FoundPetReport extends AppCompatActivity implements PlaceSelectionL
         spinner1 = (Spinner) findViewById(R.id.spinner1);
         spinner2 = (Spinner) findViewById(R.id.spinner2);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
-        btnCamera = (ImageButton) findViewById(R.id.cameraButton);
-
-        btnCamera.setOnClickListener(new OnClickListener() {
-
-
-                                         @Override
-                                         public void onClick(View view) {
-                                             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                                                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                                             }
-                                         }
-                                     });
 
         btnSubmit.setOnClickListener(new OnClickListener() {
 
@@ -171,7 +158,7 @@ public class FoundPetReport extends AppCompatActivity implements PlaceSelectionL
         Log.i(TAG, "Place Selected: " + place.getName());
 
         // Format the returned place's details and display them in the TextView.
-        mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getName(), place.getId(),
+        mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getAddress(), place.getId(),
                 place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
 
         CharSequence attributions = place.getAttributions();

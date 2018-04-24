@@ -13,7 +13,7 @@ import android.widget.ImageButton;
 public class PhotoReview extends AppCompatActivity {
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    ImageButton btnCamera = (ImageButton) findViewById(R.id.cameraButton);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +23,7 @@ public class PhotoReview extends AppCompatActivity {
 
 
     }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            btnCamera.setImageBitmap(imageBitmap);
-        }
 
 
-}}
+
+}
