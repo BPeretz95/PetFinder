@@ -23,7 +23,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDb2_pMJ0XAr_qWXrmyxV60i0Ym7_KP0-g"/>
+            android:value="AIzaSyD5Gn0iiRCtiuMTQDh9wBr6c0n0R_Vvtd8"/>
 
 
 
@@ -49,6 +49,8 @@
                 android:resource="@xml/file_paths"></meta-data>
         </provider>
 
+        <service android:name=".FetchAddressIntentService"
+            android:exported="false"/>
     </application>
 
 </manifest>

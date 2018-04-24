@@ -1,10 +1,6 @@
 package com.example.barperetz.petfinder;
 
 /**
- * Created by Bar Peretz on 4/23/2018.
- */
-
-/**
  * Constant values reused in this sample.
  */
 final class Constants {
