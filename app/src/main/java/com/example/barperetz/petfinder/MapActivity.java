@@ -4,6 +4,8 @@ package com.example.barperetz.petfinder;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -32,6 +35,7 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.*;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,17 +48,23 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
         public class MapActivity extends AppCompatActivity
-                implements OnMapReadyCallback, PlaceSelectionListener {
+                implements OnMapReadyCallback, PlaceSelectionListener, GoogleMap.OnMyLocationClickListener {
 
             private static final String TAG = MapActivity.class.getSimpleName();
             private GoogleMap mMap;
             private CameraPosition mCameraPosition;
             public TextView mPlaceDetailsText;
             public TextView mPlaceAttribution;
+            private String address1;
 
             // The entry points to the Places API.
             private GeoDataClient mGeoDataClient;
@@ -84,6 +94,7 @@ import com.google.android.gms.tasks.Task;
             private String[] mLikelyPlaceAddresses;
             private String[] mLikelyPlaceAttributions;
             private LatLng[] mLikelyPlaceLatLngs;
+            public String addressnew;
 
             @Override
             protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +133,8 @@ import com.google.android.gms.tasks.Task;
                 // Retrieve the TextViews that will display details about the selected place.
                 mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
                 mPlaceAttribution = (TextView) findViewById(R.id.place_attribution);
+
+
 
             }
 
@@ -168,6 +181,8 @@ import com.google.android.gms.tasks.Task;
             @Override
             public void onMapReady(GoogleMap map) {
                 mMap = map;
+
+                mMap.setOnMyLocationClickListener(this);
 
                 // Use a custom info window adapter to handle multiple lines of text in the
                 // info window contents.
@@ -238,6 +253,7 @@ import com.google.android.gms.tasks.Task;
                 } catch (SecurityException e)  {
                     Log.e("Exception: %s", e.getMessage());
                 }
+
             }
 
 
@@ -415,26 +431,59 @@ import com.google.android.gms.tasks.Task;
         }
     }
 
-    @Override
     public void onPlaceSelected(Place place) {
 
-        Log.i(TAG, "Place Selected: " + place.getName());
+        Log.i(TAG, "Place Selected: " + place.getAddress());
 
         // Format the returned place's details and display them in the TextView.
-        mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getAddress(), place.getId(),
-                place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
+        mPlaceDetailsText.setText(formatPlaceDetails(getResources(),
+                place.getAddress()));
+
+
         }
 
 
-    private Spanned formatPlaceDetails(Resources res, CharSequence name, String id, CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-        Log.e(TAG, res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
-        return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-                websiteUri));
+    private Spanned formatPlaceDetails(Resources res, CharSequence address) {
+        Log.e(TAG, res.getString(R.string.place_details, address));
+
+        return Html.fromHtml(res.getString(R.string.place_details, address));
+
     }
+
+    private String address1(Resources res, CharSequence address) {
+        address1 = Html.fromHtml(res.getString(R.string.place_details, address)).toString();
+        return address1;
+
+
+    }
+
 
     @Override
     public void onError(Status status) {
+
+    }
+
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(),1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        addressnew = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
+        mPlaceDetailsText.setText(addressnew);
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
 
     }
 }
