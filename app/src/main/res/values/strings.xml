@@ -8,7 +8,8 @@
 
     <string name="animal_prompt">Choose an animal</string>
     <string name="features_prompt">Choose the most distinct features</string>
-
+    <string name="option_get_place">Get place</string>
+    <string name="pick_place">Choose a place</string>
 
     <string-array name="animal_arrays">
         <item> </item>

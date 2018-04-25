@@ -27,15 +27,14 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 
-public class FoundPetReport extends AppCompatActivity implements PlaceSelectionListener {
+public class FoundPetReport extends AppCompatActivity {
 
     private Spinner spinner1, spinner2;
     private Button buttonLocation;
     private Button btnSubmit;
     private ImageButton btnCamera;
     static final int REQUEST_IMAGE_CAPTURE = 1;
-    public TextView mPlaceDetailsText;
-    public TextView mPlaceAttribution;
+
 
 
 
@@ -94,16 +93,7 @@ public class FoundPetReport extends AppCompatActivity implements PlaceSelectionL
         addListenerOnButton();
         addListenerOnSpinnerItemSelection();
 
-        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
-        // Register a listener to receive callbacks when a place has been selected or an error has
-        // occurred.
-        autocompleteFragment.setOnPlaceSelectedListener(this);
-
-        // Retrieve the TextViews that will display details about the selected place.
-        mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
-        mPlaceAttribution = (TextView) findViewById(R.id.place_attribution);
     }
 
 
@@ -152,34 +142,7 @@ public class FoundPetReport extends AppCompatActivity implements PlaceSelectionL
 
     }
 
-    @Override
-    public void onPlaceSelected(Place place) {
 
-        Log.i(TAG, "Place Selected: " + place.getName());
-
-        // Format the returned place's details and display them in the TextView.
-        mPlaceDetailsText.setText(formatPlaceDetails(getResources(), place.getAddress(), place.getId(),
-                place.getAddress(), place.getPhoneNumber(), place.getWebsiteUri()));
-
-        CharSequence attributions = place.getAttributions();
-        if (!TextUtils.isEmpty(attributions)) {
-            mPlaceAttribution.setText(Html.fromHtml(attributions.toString()));
-        } else {
-            mPlaceAttribution.setText("");
-        }
-    }
-
-    private Spanned formatPlaceDetails(Resources res, CharSequence name, String id, CharSequence address, CharSequence phoneNumber, Uri websiteUri) {
-            Log.e(TAG, res.getString(R.string.place_details, name, id, address, phoneNumber,
-                    websiteUri));
-            return Html.fromHtml(res.getString(R.string.place_details, name, id, address, phoneNumber,
-                    websiteUri));
-    }
-
-    @Override
-    public void onError(Status status) {
-
-    }
 }
 
 
