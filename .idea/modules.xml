@@ -2,10 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PetFinder.iml" filepath="$PROJECT_DIR$/PetFinder.iml" />
       <module fileurl="file://C:\Users\Bar Peretz\Desktop\PetFinder2\PetFinder.iml" filepath="C:\Users\Bar Peretz\Desktop\PetFinder2\PetFinder.iml" />
+      <module fileurl="file://C:\Users\Bar\AndroidStudioProjects\PetFinder123\PetFinder.iml" filepath="C:\Users\Bar\AndroidStudioProjects\PetFinder123\PetFinder.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PetFinder123.iml" filepath="$PROJECT_DIR$/PetFinder123.iml" />
       <module fileurl="file://C:\Users\Bar Peretz\Desktop\PetFinder\PetFinder2.iml" filepath="C:\Users\Bar Peretz\Desktop\PetFinder\PetFinder2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Bar\AndroidStudioProjects\PetFinder123\app\app.iml" filepath="C:\Users\Bar\AndroidStudioProjects\PetFinder123\app\app.iml" />
       <module fileurl="file://C:\Users\Bar Peretz\Desktop\PetFinder2\app\app.iml" filepath="C:\Users\Bar Peretz\Desktop\PetFinder2\app\app.iml" />
     </modules>
   </component>

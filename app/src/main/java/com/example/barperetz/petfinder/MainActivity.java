@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                    Intent intent = new Intent(MainActivity.this, FoundPetReport.class);
+                    Intent intent = new Intent(MainActivity.this, MapActivity.class);
                     startActivity(intent);
                 }
 

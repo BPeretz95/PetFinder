@@ -33,7 +33,10 @@ public class FoundPetReport extends AppCompatActivity {
     private Button buttonLocation;
     private Button btnSubmit;
     private ImageButton btnCamera;
+    private TextView place_details;
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private String s;
+
 
 
 
@@ -85,6 +88,8 @@ public class FoundPetReport extends AppCompatActivity {
      */
     private Button mFetchAddressButton;
 
+    String newaddress;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +97,22 @@ public class FoundPetReport extends AppCompatActivity {
 
         addListenerOnButton();
         addListenerOnSpinnerItemSelection();
+
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                newaddress= null;
+            } else {
+                newaddress= extras.getString("address");
+            }
+        } else {
+            newaddress= (String) savedInstanceState.getSerializable("address");
+        }
+        newaddress = getIntent().getStringExtra("address");
+        TextView place_details = (TextView) findViewById(R.id.place_details);
+        place_details.setText(newaddress);
+
+
 
 
     }
@@ -141,6 +162,12 @@ public class FoundPetReport extends AppCompatActivity {
 
 
     }
+
+
+
+
+
+
 
 
 }

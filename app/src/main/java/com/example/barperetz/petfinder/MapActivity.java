@@ -2,6 +2,7 @@ package com.example.barperetz.petfinder;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.location.Address;
@@ -10,6 +11,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,8 +68,9 @@ import java.util.Locale;
             public TextView mPlaceDetailsText;
             public TextView mPlaceAttribution;
             private String address1;
+            private Button buttonLocationSubmit;
 
-            // The entry points to the Places API.
+    // The entry points to the Places API.
             private GeoDataClient mGeoDataClient;
             private PlaceDetectionClient mPlaceDetectionClient;
 
@@ -96,6 +100,8 @@ import java.util.Locale;
             private LatLng[] mLikelyPlaceLatLngs;
             public String addressnew;
 
+
+
             @Override
             protected void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -108,6 +114,7 @@ import java.util.Locale;
 
                 // Retrieve the content view that renders the map.
                 setContentView(R.layout.activity_maps);
+
 
                 // Construct a GeoDataClient.
                 mGeoDataClient = Places.getGeoDataClient(this, null);
@@ -134,9 +141,21 @@ import java.util.Locale;
                 mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
                 mPlaceAttribution = (TextView) findViewById(R.id.place_attribution);
 
+                buttonLocationSubmit = (Button) findViewById(R.id.buttonLocationSubmit);
+
+                buttonLocationSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(MapActivity.this, FoundPetReport.class);
+                        intent.putExtra("address", String.valueOf(addressnew));
+                        startActivity(intent);
+                    }
+                });
 
 
-            }
+
+
+                }
 
             /**
              * Saves the state of the map when the activity is paused.
@@ -472,18 +491,34 @@ import java.util.Locale;
 
         try {
             addresses = geocoder.getFromLocation(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(),1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+            addressnew = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+            mPlaceDetailsText.setText(addressnew);
+            Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+            Intent i = new Intent(MapActivity.this, FoundPetReport.class);
+            i.putExtra("address", String.valueOf(addressnew));
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        addressnew = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-        String city = addresses.get(0).getLocality();
-        String state = addresses.get(0).getAdminArea();
-        String country = addresses.get(0).getCountryName();
-        String postalCode = addresses.get(0).getPostalCode();
-        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL
-        mPlaceDetailsText.setText(addressnew);
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+
 
     }
-}
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+

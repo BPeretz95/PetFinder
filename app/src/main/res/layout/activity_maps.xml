@@ -11,15 +11,6 @@
     android:orientation="vertical"
     tools:context=".MapActivity">
 
-    <TextView
-        android:id="@+id/place_details"
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/autocomplete_fragment"
-        android:textColor="@color/colorPrimaryDark"/>
-
     <fragment
         android:id="@+id/autocomplete_fragment"
         android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
@@ -29,14 +20,38 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
+    <TextView
+        android:id="@+id/locationDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/location_description" />
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="426dp"
         tools:context="com.example.barperetz.petfinder.MapActivity" />
+
+    <TextView
+        android:id="@+id/place_details"
+        android:textSize="11pt"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/autocomplete_fragment"
+        android:background="@drawable/back"
+        android:textColor="@color/colorPrimaryDark" />
+
+    <Button
+        android:id="@+id/buttonLocationSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/colorPrimary"
+        android:text="Submit Location" />
 
 </LinearLayout>
 
