@@ -11,11 +11,21 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/peticonnew3"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/peticonnew3_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -26,7 +36,7 @@
             android:value="AIzaSyD5Gn0iiRCtiuMTQDh9wBr6c0n0R_Vvtd8"/>
 
 
-
+        <activity android:name=".CameraActivity"></activity>
         <activity android:name=".MapActivity">
         </activity>
         <activity android:name=".PhotoReview"></activity>
@@ -52,6 +62,8 @@
 
         <service android:name=".FetchAddressIntentService"
             android:exported="false"/>
+
+
     </application>
 
 </manifest>

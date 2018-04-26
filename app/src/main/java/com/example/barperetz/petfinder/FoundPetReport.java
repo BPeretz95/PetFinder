@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,12 +30,19 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class FoundPetReport extends AppCompatActivity {
 
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private Spinner spinner1, spinner2;
     private Button buttonLocation;
     private Button btnSubmit;
     private ImageButton btnCamera;
+    private ImageView imageViewCamera;
     private TextView place_details;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String s;
@@ -52,6 +62,7 @@ public class FoundPetReport extends AppCompatActivity {
      * Provides access to the Fused Location Provider API.
      */
     private FusedLocationProviderClient mFusedLocationClient;
+
 
     /**
      * Represents a geographical location.
@@ -112,16 +123,43 @@ public class FoundPetReport extends AppCompatActivity {
         TextView place_details = (TextView) findViewById(R.id.place_details);
         place_details.setText(newaddress);
 
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
 
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.example.android.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            }
+        }
+        }
+    String mCurrentPhotoPath;
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
 
-
+        // Save a file: path for use with ACTION_VIEW intents
+        String mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
     }
-
-
-
-
-
-
     // add items into spinner dynamically
 
     public void addListenerOnSpinnerItemSelection() {
@@ -152,12 +190,15 @@ public class FoundPetReport extends AppCompatActivity {
 
         });
     }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        ImageView imageViewCamera = (ImageView) findViewById(R.id.imageViewCamera);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            btnCamera.setImageBitmap(imageBitmap);
+            imageViewCamera.setImageBitmap(imageBitmap);
         }
 
 

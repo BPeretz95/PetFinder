@@ -10,27 +10,27 @@
 
     <Spinner
         android:id="@+id/spinner1"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="39dp"
         android:layout_above="@+id/spinner2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="14dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="19dp"
         android:entries="@array/animal_arrays"
         android:hint="Choose animal type"
         android:prompt="@string/animal_prompt" />
 
     <Spinner
         android:id="@+id/spinner2"
-        android:layout_width="match_parent"
-        android:layout_height="37dp"
+        android:layout_width="150dp"
+        android:layout_height="39dp"
         android:layout_above="@+id/editEmail"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="76dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:entries="@array/features_arrays"
         android:hint="Choose unique features"
-        android:prompt="@string/features_prompt" />
+        android:prompt="@string/features_prompt"
+        android:spinnerMode="dropdown" />
 
     <EditText
         android:id="@+id/editEmail"
@@ -93,6 +93,7 @@
 
     <TextView
         android:id="@+id/place_details"
+        android:textSize="12pt"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -109,6 +110,42 @@
         android:layout_below="@+id/place_details"
         android:layout_marginTop="12dp"
         android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/textViewDropdown1"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/spinner1"
+        android:layout_toLeftOf="@+id/spinner1"
+        android:layout_toStartOf="@+id/spinner1"
+        android:gravity="center"
+        android:text="Choose animal type" />
+
+    <TextView
+        android:id="@+id/textViewDropdown2"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/spinner2"
+        android:layout_toLeftOf="@+id/spinner2"
+        android:layout_toStartOf="@+id/spinner2"
+        android:text="Choose distinct features"
+        android:gravity="center"/>
+
+    <ImageView
+        android:id="@+id/imageViewCamera"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/spinner1"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/place_attribution"
+        app:srcCompat="@drawable/back" />
 
 
 </RelativeLayout>
