@@ -22,6 +22,8 @@
             android:authorities="com.example.android.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
+
+
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"></meta-data>
@@ -36,10 +38,12 @@
             android:value="AIzaSyD5Gn0iiRCtiuMTQDh9wBr6c0n0R_Vvtd8"/>
 
 
-        <activity android:name=".CameraActivity"></activity>
-        <activity android:name=".MapActivity">
+        <activity android:name=".LostPetReport"></activity>
+        <activity android:name=".MapActivityLooking"></activity>
+        <activity android:name=".CameraActivity">
         </activity>
-        <activity android:name=".PhotoReview"></activity>
+        <activity android:name=".MapActivityFound">
+        </activity>
         <activity android:name=".FoundPetReport">
         </activity>
         <activity android:name=".MainActivity">

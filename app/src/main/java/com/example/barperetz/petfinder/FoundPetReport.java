@@ -3,12 +3,16 @@ package com.example.barperetz.petfinder;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -45,8 +49,9 @@ import java.util.Date;
 public class FoundPetReport extends AppCompatActivity {
 
     private static final int REQUEST_TAKE_PHOTO = 1;
-    private static final int PICTURE_RESULT = 0;
+    private static final int SCREEN_ORIENTATION_LANDSCAPE = 0;
     private Spinner spinner1, spinner2;
+    private ImageButton imageButton;
     private Button buttonLocation;
     private Button btnSubmit;
     private ImageButton btnCamera;
@@ -56,6 +61,8 @@ public class FoundPetReport extends AppCompatActivity {
     private String s;
     private Uri imageUri;
     private Object imageurl;
+    private static final int PICTURE_RESULT = 0;
+
 
 
 
@@ -120,6 +127,12 @@ public class FoundPetReport extends AppCompatActivity {
         addListenerOnButton();
         addListenerOnSpinnerItemSelection();
 
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        imageUri = getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             if(extras == null) {
@@ -134,20 +147,19 @@ public class FoundPetReport extends AppCompatActivity {
         TextView place_details = (TextView) findViewById(R.id.place_details);
         place_details.setText(newaddress);
 
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.TITLE, "New Picture");
-        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
-        imageUri = getContentResolver().insert(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, PICTURE_RESULT);
 
 
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_SCREEN_ORIENTATION, FoundPetReport.SCREEN_ORIENTATION_LANDSCAPE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                startActivityForResult(intent, PICTURE_RESULT);
             }
-
-
-
+        });
+            }
 
 
     // add items into spinner dynamically
@@ -181,9 +193,9 @@ public class FoundPetReport extends AppCompatActivity {
         });
     }
 
-
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ImageView imageViewCamera = (ImageView) findViewById(R.id.imageViewCamera);
+
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
         switch (requestCode) {
 
             case PICTURE_RESULT:
@@ -191,15 +203,22 @@ public class FoundPetReport extends AppCompatActivity {
                     try {
                         Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
                                 getContentResolver(), imageUri);
-                        imageViewCamera.setImageBitmap(thumbnail);
+                        imageButton.setImageBitmap(thumbnail);
                         imageurl = getRealPathFromURI(imageUri);
+                        imageUri = data.getData();
+
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                 }
         }
+
+
     }
+
+
 
     public String getRealPathFromURI(Uri contentUri) {
         String[] proj = { MediaStore.Images.Media.DATA };
@@ -209,12 +228,6 @@ public class FoundPetReport extends AppCompatActivity {
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
-
-
-
-
-
-
 
 
 }

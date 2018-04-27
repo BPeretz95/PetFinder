@@ -8,17 +8,14 @@ import android.content.res.Resources;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,8 +35,6 @@ import com.google.android.gms.location.places.PlaceLikelihood;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.*;
-import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,21 +47,19 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.List;
 import java.util.Locale;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
-        public class MapActivity extends AppCompatActivity
+        public class MapActivityFound extends AppCompatActivity
                 implements OnMapReadyCallback, PlaceSelectionListener, GoogleMap.OnMyLocationClickListener {
 
-            private static final String TAG = MapActivity.class.getSimpleName();
+            private static final String TAG = MapActivityFound.class.getSimpleName();
             private GoogleMap mMap;
             private CameraPosition mCameraPosition;
             public TextView mPlaceDetailsText;
-            public TextView mPlaceAttribution;
             private String address1;
             private Button buttonLocationSubmit;
 
@@ -113,7 +106,7 @@ import java.util.Locale;
                 }
 
                 // Retrieve the content view that renders the map.
-                setContentView(R.layout.activity_maps);
+                setContentView(R.layout.activity_maps_found);
 
 
                 // Construct a GeoDataClient.
@@ -130,23 +123,19 @@ import java.util.Locale;
                         .findFragmentById(R.id.map);
                 mapFragment.getMapAsync(this);
 
-                com.google.android.gms.location.places.ui.PlaceAutocompleteFragment autocompleteFragment = (com.google.android.gms.location.places.ui.PlaceAutocompleteFragment)
-                        getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
 
                 // Register a listener to receive callbacks when a place has been selected or an error has
                 // occurred.
-                autocompleteFragment.setOnPlaceSelectedListener(this);
 
                 // Retrieve the TextViews that will display details about the selected place.
                 mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
-                mPlaceAttribution = (TextView) findViewById(R.id.place_attribution);
 
                 buttonLocationSubmit = (Button) findViewById(R.id.buttonLocationSubmit);
 
                 buttonLocationSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(MapActivity.this, FoundPetReport.class);
+                        Intent intent = new Intent(MapActivityFound.this, FoundPetReport.class);
                         intent.putExtra("address", String.valueOf(addressnew));
                         startActivity(intent);
                     }
@@ -494,7 +483,7 @@ import java.util.Locale;
             addressnew = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
             mPlaceDetailsText.setText(addressnew);
             Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
-            Intent i = new Intent(MapActivity.this, FoundPetReport.class);
+            Intent i = new Intent(MapActivityFound.this, FoundPetReport.class);
             i.putExtra("address", String.valueOf(addressnew));
 
 
