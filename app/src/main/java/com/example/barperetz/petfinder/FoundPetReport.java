@@ -1,13 +1,20 @@
 package com.example.barperetz.petfinder;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -38,6 +45,7 @@ import java.util.Date;
 public class FoundPetReport extends AppCompatActivity {
 
     private static final int REQUEST_TAKE_PHOTO = 1;
+    private static final int PICTURE_RESULT = 0;
     private Spinner spinner1, spinner2;
     private Button buttonLocation;
     private Button btnSubmit;
@@ -46,6 +54,8 @@ public class FoundPetReport extends AppCompatActivity {
     private TextView place_details;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private String s;
+    private Uri imageUri;
+    private Object imageurl;
 
 
 
@@ -101,6 +111,7 @@ public class FoundPetReport extends AppCompatActivity {
 
     String newaddress;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,43 +134,22 @@ public class FoundPetReport extends AppCompatActivity {
         TextView place_details = (TextView) findViewById(R.id.place_details);
         place_details.setText(newaddress);
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        imageUri = getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, PICTURE_RESULT);
+
 
             }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-        }
-    String mCurrentPhotoPath;
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        String mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
+
+
+
+
     // add items into spinner dynamically
 
     public void addListenerOnSpinnerItemSelection() {
@@ -192,16 +182,32 @@ public class FoundPetReport extends AppCompatActivity {
     }
 
 
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ImageView imageViewCamera = (ImageView) findViewById(R.id.imageViewCamera);
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            imageViewCamera.setImageBitmap(imageBitmap);
+        switch (requestCode) {
+
+            case PICTURE_RESULT:
+                if (resultCode == Activity.RESULT_OK) {
+                    try {
+                        Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
+                                getContentResolver(), imageUri);
+                        imageViewCamera.setImageBitmap(thumbnail);
+                        imageurl = getRealPathFromURI(imageUri);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
         }
+    }
 
-
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
 
