@@ -6,5 +6,6 @@
     <color name="colorBlueish">#0892A2</color>
     <color name="findpetbutton">#FA4931</color>
     <color name="foundpetbutton">#3FD12B</color>
+    <color name="red">#FF0000</color>
 
 </resources>

@@ -123,13 +123,6 @@ public class MapActivityLooking extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        com.google.android.gms.location.places.ui.PlaceAutocompleteFragment autocompleteFragment = (com.google.android.gms.location.places.ui.PlaceAutocompleteFragment)
-                getFragmentManager().findFragmentById(R.id.autocomplete_fragment);
-
-        // Register a listener to receive callbacks when a place has been selected or an error has
-        // occurred.
-        autocompleteFragment.setOnPlaceSelectedListener(this);
-
         // Retrieve the TextViews that will display details about the selected place.
         mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
 
@@ -138,7 +131,7 @@ public class MapActivityLooking extends AppCompatActivity
         buttonLocationSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapActivityLooking.this, FoundPetReport.class);
+                Intent intent = new Intent(MapActivityLooking.this, LostPetReport.class);
                 intent.putExtra("address", String.valueOf(addressnew));
                 startActivity(intent);
             }

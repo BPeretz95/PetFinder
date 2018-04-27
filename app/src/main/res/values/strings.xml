@@ -11,12 +11,19 @@
     <string name="option_get_place">Get place</string>
     <string name="pick_place">Choose a place</string>
     <string name="location_description">Tap the (blue) marker to set your current location.</string>
+    <string name="location_lost_description">Find your pet! Tap the markers on the map or view a list.</string>
 
     <string-array name="animal_arrays">
         <item> </item>
         <item>Dog</item>
         <item>Cat</item>
         <item>Other</item>
+    </string-array>
+
+    <string-array name="gender_arrays">
+        <item> </item>
+        <item>Male</item>
+        <item>Female</item>
     </string-array>
 
     <string-array name="features_arrays">
