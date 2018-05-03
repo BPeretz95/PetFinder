@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.ImageView;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -34,23 +36,31 @@ public class NewReportedMarker extends MapActivityLooking {
     public Location mLastLocation;
     public LatLng location;
     private LatLng position;
-    public String addressnew;
+    public String newaddress;
+    public String title = "This is Title";
+    public String subTitle = "This is \nSubtitle";
+    public Bitmap thumbnail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if (extras == null) {
-                addressnew = null;
+                    Bundle extras = getIntent().getExtras();
+                    if (extras == null) {
+                        newaddress = null;
+                        thumbnail = null;
             } else {
-                addressnew = extras.getString("address");
+                newaddress = extras.getString("address");
+
             }
             } else {
-            addressnew = (String) savedInstanceState.getSerializable("address");
+            newaddress = (String) savedInstanceState.getSerializable("address");
+
         }
-            addressnew = getIntent().getStringExtra("address");
+        thumbnail = getIntent().getParcelableExtra("photo");
+        newaddress = getIntent().getStringExtra("address");
+
 
     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
         // TODO: Consider calling
@@ -89,7 +99,10 @@ public class NewReportedMarker extends MapActivityLooking {
 
             // Setting the title for the marker.
             // This will be displayed on taping the marker
-            markerOptions.title("Test");
+            markerOptions.title(newaddress);
+
+            markerOptions.snippet(subTitle);
+
 
             // Clears the previously touched position
             mMap.clear();
@@ -97,9 +110,12 @@ public class NewReportedMarker extends MapActivityLooking {
             // Animating to the touched position
             mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
 
+            CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(NewReportedMarker.this);
+            mMap.setInfoWindowAdapter(adapter);
+
+
             // Placing a marker on the touched position
             mMap.addMarker(markerOptions);
-
 
 
         }

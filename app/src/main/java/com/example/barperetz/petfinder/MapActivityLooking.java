@@ -93,6 +93,8 @@ public class MapActivityLooking extends AppCompatActivity
     private String[] mLikelyPlaceAttributions;
     private LatLng[] mLikelyPlaceLatLngs;
     public String addressnew;
+    public String title;
+    public String subTitle;
 
 
 
@@ -508,6 +510,8 @@ public class MapActivityLooking extends AppCompatActivity
         // Placing a marker on the touched position
         mMap.addMarker(markerOptions);
     }
+
+
 }
 
 

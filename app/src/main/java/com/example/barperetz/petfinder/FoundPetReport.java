@@ -174,6 +174,7 @@ public class FoundPetReport extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FoundPetReport.this, NewReportedMarker.class);
+                intent.putExtra("address", newaddress);
                 startActivity(intent);
             }
         });
@@ -194,6 +195,10 @@ public class FoundPetReport extends AppCompatActivity {
                         imageurl = getRealPathFromURI(imageUri);
                         imageUri = data.getData();
 
+                        Intent photoIntent = new Intent(FoundPetReport.this, CustomInfoWindowAdapter.class);
+                        photoIntent.putExtra("photo", thumbnail);
+                        startActivity(photoIntent);
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -201,7 +206,6 @@ public class FoundPetReport extends AppCompatActivity {
 
                 }
         }
-
 
     }
 
