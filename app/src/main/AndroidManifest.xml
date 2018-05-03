@@ -37,7 +37,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD5Gn0iiRCtiuMTQDh9wBr6c0n0R_Vvtd8"/>
 
-
+        <activity android:name=".NewReportedMarker"></activity>
         <activity android:name=".LostPetReport"></activity>
         <activity android:name=".MapActivityLooking"></activity>
         <activity android:name=".CameraActivity">

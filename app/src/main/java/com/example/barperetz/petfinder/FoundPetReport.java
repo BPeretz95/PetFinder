@@ -2,29 +2,21 @@ package com.example.barperetz.petfinder;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.location.Location;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.content.FileProvider;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -33,21 +25,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class FoundPetReport extends AppCompatActivity {
-
+    public GoogleMap mMap;
     private static final int REQUEST_TAKE_PHOTO = 1;
     private static final int SCREEN_ORIENTATION_LANDSCAPE = 0;
     private Spinner spinner1, spinner2;
@@ -62,10 +52,6 @@ public class FoundPetReport extends AppCompatActivity {
     private Uri imageUri;
     private Object imageurl;
     private static final int PICTURE_RESULT = 0;
-
-
-
-
 
 
     private static final String TAG = FoundPetReport.class.getSimpleName();
@@ -84,7 +70,7 @@ public class FoundPetReport extends AppCompatActivity {
     /**
      * Represents a geographical location.
      */
-    protected Location mLastLocation;
+    public Location mLastLocation;
 
     /**
      * Tracks whether the user has requested an address. Becomes true when the user requests an
@@ -105,6 +91,7 @@ public class FoundPetReport extends AppCompatActivity {
      * Displays the location address.
      */
     private TextView mLocationAddressTextView;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
     /**
      * Visible while the address is being fetched.
@@ -118,6 +105,9 @@ public class FoundPetReport extends AppCompatActivity {
 
     String newaddress;
 
+    public LatLng location;
+    private LatLng position;
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,6 +117,7 @@ public class FoundPetReport extends AppCompatActivity {
         addListenerOnButton();
         addListenerOnSpinnerItemSelection();
 
+
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Picture");
         values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
@@ -135,18 +126,20 @@ public class FoundPetReport extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                newaddress= null;
+            if (extras == null) {
+                newaddress = null;
+                location = null;
             } else {
-                newaddress= extras.getString("address");
+                newaddress = extras.getString("address");
+                location = extras.getParcelable("location");
             }
         } else {
-            newaddress= (String) savedInstanceState.getSerializable("address");
+            newaddress = (String) savedInstanceState.getSerializable("address");
+            location = (LatLng) savedInstanceState.getParcelable("location");
         }
         newaddress = getIntent().getStringExtra("address");
         TextView place_details = (TextView) findViewById(R.id.place_details);
         place_details.setText(newaddress);
-
 
 
         ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
@@ -159,7 +152,7 @@ public class FoundPetReport extends AppCompatActivity {
                 startActivityForResult(intent, PICTURE_RESULT);
             }
         });
-            }
+    }
 
 
     // add items into spinner dynamically
@@ -180,18 +173,12 @@ public class FoundPetReport extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(FoundPetReport.this,
-                        "OnClickListener : " +
-                                "\nSpinner 1 : "+ String.valueOf(spinner1.getSelectedItem()) +
-                                "\nSpinner 2 : "+ String.valueOf(spinner2.getSelectedItem()),
-                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(FoundPetReport.this, NewReportedMarker.class);
+                startActivity(intent);
             }
-
-
-
         });
     }
+
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -219,9 +206,8 @@ public class FoundPetReport extends AppCompatActivity {
     }
 
 
-
     public String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
+        String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = managedQuery(contentUri, proj, null, null, null);
         int column_index = cursor
                 .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -229,7 +215,10 @@ public class FoundPetReport extends AppCompatActivity {
         return cursor.getString(column_index);
     }
 
-
 }
+
+
+
+
 
 

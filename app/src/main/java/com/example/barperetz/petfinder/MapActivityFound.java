@@ -56,95 +56,94 @@ import java.util.Locale;
         public class MapActivityFound extends AppCompatActivity
                 implements OnMapReadyCallback, PlaceSelectionListener, GoogleMap.OnMyLocationClickListener {
 
-            private static final String TAG = MapActivityFound.class.getSimpleName();
-            private GoogleMap mMap;
-            private CameraPosition mCameraPosition;
-            public TextView mPlaceDetailsText;
-            private String address1;
-            private Button buttonLocationSubmit;
+    private static final String TAG = MapActivityFound.class.getSimpleName();
+
+    private CameraPosition mCameraPosition;
+    public TextView mPlaceDetailsText;
+    private String address1;
+    private Button buttonLocationSubmit;
 
     // The entry points to the Places API.
-            private GeoDataClient mGeoDataClient;
-            private PlaceDetectionClient mPlaceDetectionClient;
+    private GeoDataClient mGeoDataClient;
+    private PlaceDetectionClient mPlaceDetectionClient;
 
-            // The entry point to the Fused Location Provider.
-            private FusedLocationProviderClient mFusedLocationProviderClient;
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
-            // A default location (Sydney, Australia) and default zoom to use when location permission is
-            // not granted.
-            private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
-            private static final int DEFAULT_ZOOM = 15;
-            private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
-            private boolean mLocationPermissionGranted;
+    // A default location (Sydney, Australia) and default zoom to use when location permission is
+    // not granted.
+    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private static final int DEFAULT_ZOOM = 15;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
+    private boolean mLocationPermissionGranted;
 
-            // The geographical location where the device is currently located. That is, the last-known
-            // location retrieved by the Fused Location Provider.
-            private Location mLastKnownLocation;
+    // The geographical location where the device is currently located. That is, the last-known
+    // location retrieved by the Fused Location Provider.
+    private Location mLastKnownLocation;
 
-            // Keys for storing activity state.
-            private static final String KEY_CAMERA_POSITION = "camera_position";
-            private static final String KEY_LOCATION = "location";
+    // Keys for storing activity state.
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
 
-            // Used for selecting the current place.
-            private static final int M_MAX_ENTRIES = 5;
-            private String[] mLikelyPlaceNames;
-            private String[] mLikelyPlaceAddresses;
-            private String[] mLikelyPlaceAttributions;
-            private LatLng[] mLikelyPlaceLatLngs;
-            public String addressnew;
+    // Used for selecting the current place.
+    private static final int M_MAX_ENTRIES = 5;
+    private String[] mLikelyPlaceNames;
+    private String[] mLikelyPlaceAddresses;
+    private String[] mLikelyPlaceAttributions;
+    private LatLng[] mLikelyPlaceLatLngs;
+    public String addressnew;
+    private GoogleMap mMap;
 
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
+        // Retrieve location and camera position from saved instance state.
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
+
+        // Retrieve the content view that renders the map.
+        setContentView(R.layout.activity_maps_found);
+
+
+        // Construct a GeoDataClient.
+        mGeoDataClient = Places.getGeoDataClient(this, null);
+
+        // Construct a PlaceDetectionClient.
+        mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
+
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+        // Build the map.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+
+        // Register a listener to receive callbacks when a place has been selected or an error has
+        // occurred.
+
+        // Retrieve the TextViews that will display details about the selected place.
+        mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
+
+        buttonLocationSubmit = (Button) findViewById(R.id.buttonLocationSubmit);
+
+        buttonLocationSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
-            protected void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-
-                // Retrieve location and camera position from saved instance state.
-                if (savedInstanceState != null) {
-                    mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
-                    mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
-                }
-
-                // Retrieve the content view that renders the map.
-                setContentView(R.layout.activity_maps_found);
+            public void onClick(View view) {
+                Intent intent = new Intent(MapActivityFound.this, FoundPetReport.class);
+                intent.putExtra("address", String.valueOf(addressnew));
+                startActivity(intent);
+            }
+        });
 
 
-                // Construct a GeoDataClient.
-                mGeoDataClient = Places.getGeoDataClient(this, null);
+    }
 
-                // Construct a PlaceDetectionClient.
-                mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-
-                // Construct a FusedLocationProviderClient.
-                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-                // Build the map.
-                SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                        .findFragmentById(R.id.map);
-                mapFragment.getMapAsync(this);
-
-
-                // Register a listener to receive callbacks when a place has been selected or an error has
-                // occurred.
-
-                // Retrieve the TextViews that will display details about the selected place.
-                mPlaceDetailsText = (TextView) findViewById(R.id.place_details);
-
-                buttonLocationSubmit = (Button) findViewById(R.id.buttonLocationSubmit);
-
-                buttonLocationSubmit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(MapActivityFound.this, FoundPetReport.class);
-                        intent.putExtra("address", String.valueOf(addressnew));
-                        startActivity(intent);
-                    }
-                });
-
-
-
-
-                }
 
             /**
              * Saves the state of the map when the activity is paused.
@@ -479,19 +478,20 @@ import java.util.Locale;
         geocoder = new Geocoder(this, Locale.getDefault());
 
         try {
+            Bundle args = new Bundle();
             addresses = geocoder.getFromLocation(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(),1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
             addressnew = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
             mPlaceDetailsText.setText(addressnew);
             Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
             Intent i = new Intent(MapActivityFound.this, FoundPetReport.class);
+            Intent i2 = new Intent(MapActivityFound.this, FoundPetReport.class);
+            i2.putExtra("address", String.valueOf(addressnew));
             i.putExtra("address", String.valueOf(addressnew));
-
+            i.putExtra("location", location);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
     }
 

@@ -37,6 +37,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.*;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -54,10 +55,10 @@ import java.util.Locale;
  * An activity that displays a map showing the place at the device's current location.
  */
 public class MapActivityLooking extends AppCompatActivity
-        implements OnMapReadyCallback, PlaceSelectionListener, GoogleMap.OnMyLocationClickListener {
+        implements OnMapReadyCallback, PlaceSelectionListener, GoogleMap.OnMyLocationClickListener, OnMapClickListener {
 
     private static final String TAG = MapActivityFound.class.getSimpleName();
-    private GoogleMap mMap;
+    public GoogleMap mMap;
     private CameraPosition mCameraPosition;
     public TextView mPlaceDetailsText;
     private String address1;
@@ -422,8 +423,8 @@ public class MapActivityLooking extends AppCompatActivity
         }
         try {
             if (mLocationPermissionGranted) {
-                mMap.setMyLocationEnabled(true);
-                mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
             } else {
                 mMap.setMyLocationEnabled(false);
                 mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -476,11 +477,6 @@ public class MapActivityLooking extends AppCompatActivity
 
         try {
             addresses = geocoder.getFromLocation(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude(),1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
-            addressnew = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
-            mPlaceDetailsText.setText(addressnew);
-            Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
-            Intent i = new Intent(MapActivityLooking.this, FoundPetReport.class);
-            i.putExtra("address", String.valueOf(addressnew));
 
 
         } catch (IOException e) {
@@ -491,9 +487,34 @@ public class MapActivityLooking extends AppCompatActivity
 
     }
 
+    @Override
+    public void onMapClick(LatLng latLng) {
+        // Creating a marker
+        MarkerOptions markerOptions = new MarkerOptions();
 
+        // Setting the position for the marker
+        markerOptions.position(latLng);
 
+        // Setting the title for the marker.
+        // This will be displayed on taping the marker
+        markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+
+        // Clears the previously touched position
+        mMap.clear();
+
+        // Animating to the touched position
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+
+        // Placing a marker on the touched position
+        mMap.addMarker(markerOptions);
+    }
 }
+
+
+
+
+
+
 
 
 
