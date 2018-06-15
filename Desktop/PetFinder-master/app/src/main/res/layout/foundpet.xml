@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="100dp"
+        android:layout_height="39dp"
+        android:layout_alignBaseline="@+id/textViewDropdown1"
+        android:layout_alignBottom="@+id/textViewDropdown1"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:dropDownVerticalOffset="-15dp"
+        android:entries="@array/animal_arrays"
+        android:hint="Choose animal type"
+        android:prompt="@string/animal_prompt"
+        android:spinnerMode="dropdown" />
+
+    <Spinner
+        android:id="@+id/spinner2"
+        android:layout_width="150dp"
+        android:layout_height="39dp"
+        android:layout_alignEnd="@+id/place_details"
+        android:layout_alignRight="@+id/place_details"
+        android:layout_below="@+id/spinner1"
+        android:dropDownVerticalOffset="-15dp"
+        android:entries="@array/features_arrays"
+        android:hint="Choose unique features"
+        android:prompt="@string/features_prompt"
+        android:spinnerMode="dropdown" />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/petDescription"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="12dp"
+        android:text="Description: "
+        android:id="@+id/textView" />
+
+    <EditText
+        android:id="@+id/petDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnSubmit"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="14dp"
+        android:layout_marginStart="14dp"
+        android:text="Submit" />
+
+
+    <TextView
+        android:id="@+id/place_details"
+        android:layout_width="380dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12pt" />
+
+    <TextView
+        android:id="@+id/textViewDropdown1"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_above="@+id/textViewDropdown2"
+        android:layout_alignLeft="@+id/place_details"
+        android:layout_alignStart="@+id/place_details"
+        android:gravity="center"
+        android:text="Choose animal type" />
+
+    <TextView
+        android:id="@+id/textViewDropdown2"
+        android:layout_width="wrap_content"
+        android:layout_height="39dp"
+        android:layout_above="@+id/textView"
+        android:layout_alignLeft="@+id/textViewDropdown1"
+        android:layout_alignStart="@+id/textViewDropdown1"
+        android:gravity="center"
+        android:text="Choose distinct features" />
+
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:layout_alignLeft="@+id/place_details"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignStart="@+id/place_details"
+        android:layout_below="@+id/place_details"
+        android:scaleType="fitXY"
+        app:srcCompat="@mipmap/peticonnew_round" />
+
+
+</RelativeLayout>
