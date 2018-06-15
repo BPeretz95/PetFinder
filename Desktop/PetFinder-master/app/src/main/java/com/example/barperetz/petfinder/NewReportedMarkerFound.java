@@ -4,13 +4,16 @@ import android.Manifest;
 import android.app.FragmentManager;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,10 +52,12 @@ public class NewReportedMarkerFound extends MapActivityLooking {
                         thumbnail = null;
             } else {
                 newaddress = extras.getString("address");
+                thumbnail = extras.getParcelable("photo");
 
             }
             } else {
             newaddress = (String) savedInstanceState.getSerializable("address");
+            thumbnail = (Bitmap) savedInstanceState.getParcelable("photo");
 
         }
         thumbnail = getIntent().getParcelableExtra("photo");
@@ -100,6 +105,7 @@ public class NewReportedMarkerFound extends MapActivityLooking {
             markerOptions.title(newaddress);
 
             markerOptions.snippet(subTitle);
+
 
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
 

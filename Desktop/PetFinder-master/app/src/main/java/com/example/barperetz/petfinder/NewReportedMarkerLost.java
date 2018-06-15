@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -34,6 +35,7 @@ public class NewReportedMarkerLost extends MapActivityLooking {
     public String title = "This is Title";
     public String subTitle = "This is \nSubtitle";
     public Bitmap thumbnail;
+    public String latlng;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,16 +46,27 @@ public class NewReportedMarkerLost extends MapActivityLooking {
             if (extras == null) {
                 newaddress = null;
                 thumbnail = null;
+                latlng = null;
+
             } else {
                 newaddress = extras.getString("addresslost");
+                latlng = extras.getString("latlng");
 
             }
         } else {
             newaddress = (String) savedInstanceState.getSerializable("addresslost");
+            latlng = (String) savedInstanceState.getSerializable("latlng");
 
         }
         thumbnail = getIntent().getParcelableExtra("photo");
         newaddress = getIntent().getStringExtra("addresslost");
+        latlng = getIntent().getStringExtra("latlng");
+        String varlat = latlng.replace("lat/lng: ", "").replace("(", "").replace(")", "");
+        Log.d("newlat", String.valueOf(varlat));
+        String[] newlat = varlat.split(",");
+        double latitude = Double.parseDouble(newlat[0]);
+        double longitude = Double.parseDouble(newlat[1]);
+        final LatLng newpos = new LatLng(latitude, longitude);
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -66,6 +79,7 @@ public class NewReportedMarkerLost extends MapActivityLooking {
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
         locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
@@ -79,17 +93,13 @@ public class NewReportedMarkerLost extends MapActivityLooking {
             public void onComplete(@NonNull Task<Location> task) {
 
                 if (task.isSuccessful()) {
-
                     // Set the map's camera position to the current location of the device.
-                    mLastLocation = task.getResult();
-                    position = new LatLng(mLastLocation.getLatitude(),
-                            mLastLocation.getLongitude());
 
                     // Creating a marker
                     MarkerOptions markerOptions = new MarkerOptions();
 
                     // Setting the position for the marker
-                    markerOptions.position(position);
+                    markerOptions.position(newpos);
 
                     // Setting the title for the marker.
                     // This will be displayed on taping the marker
@@ -104,7 +114,7 @@ public class NewReportedMarkerLost extends MapActivityLooking {
                     mMap.clear();
 
                     // Animating to the touched position
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(position));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(newpos));
 
                     CustomInfoWindowAdapter adapter = new CustomInfoWindowAdapter(NewReportedMarkerLost.this);
                     mMap.setInfoWindowAdapter(adapter);
@@ -117,7 +127,6 @@ public class NewReportedMarkerLost extends MapActivityLooking {
                 }
 
             }
-
         });
     }
 }
