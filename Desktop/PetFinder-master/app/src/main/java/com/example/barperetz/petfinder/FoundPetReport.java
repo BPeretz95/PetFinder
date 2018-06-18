@@ -186,9 +186,6 @@ public class FoundPetReport extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                ContentValues values = new ContentValues();
-                values.put("address", newaddress);
-                db.insertPet(newaddress, type, features, description);
                 sendImage();
 
 
